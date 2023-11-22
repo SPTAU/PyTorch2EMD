@@ -1,7 +1,6 @@
 import torch
 import numpy as np
-import time
-from emd import earth_mover_distance
+from cuda.emd import earth_mover_distance
 
 # gt
 p1 = torch.from_numpy(np.array([[[1.7, -0.1, 0.1], [0.1, 1.2, 0.3]]], dtype=np.float32)).cuda()
@@ -32,8 +31,9 @@ print(p2)
 p1.requires_grad = True
 p2.requires_grad = True
 
-d = earth_mover_distance(p1, p2, transpose=False)
-print(d)
+emd = earth_mover_distance()
+d = emd(p1, p2)
+print('pred_dist: ', d)
 
 loss = d[0] / 2 + d[1] * 2 + d[2] / 3
 print(loss)

@@ -3,3 +3,4 @@ build
 dist
 emd_ext.egg-info
 *.so
+/tmp

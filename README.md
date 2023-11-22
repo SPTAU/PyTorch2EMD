@@ -2,25 +2,22 @@
 
 ## Dependency
 
-The code has been tested on Ubuntu 16.04, PyTorch 1.1.0, CUDA 9.0.
+The code has been tested on Ubuntu 22.04, PyTorch 2.0.0, CUDA 11.2.
 
 ## Usage
 
-First compile using
-        
-        python setup.py install
+```py
+from emd import earth_mover_distance
 
-Then, copy the lib file out to the main directory,
+d = earth_mover_distance(p1, p2, transpose=False)  # p1: B x N1 x 3, p2: B x N2 x 3
 
-        cp build/lib.linux-x86_64-3.6/emd_cuda.cpython-36m-x86_64-linux-gnu.so .
-
-Then, you can use it by simply
-
-        from emd import earth_mover_distance
-        d = earth_mover_distance(p1, p2, transpose=False)  # p1: B x N1 x 3, p2: B x N2 x 3
-
-Check `test_emd_loss.py` for example.
-
+import torch, emd.earth_mover_distance
+chamLoss = chamfer3D.dist_chamfer_3D.chamfer_3DDist()
+points1 = torch.rand(32, 1000, 3).cuda()
+points2 = torch.rand(32, 2000, 3, requires_grad=True).cuda()
+dist1, dist2, idx1, idx2 = chamLoss(points1, points2)
+```
+[ ] 修改readme
 ## Author
 
 The cuda code is originally written by Haoqiang Fan. The PyTorch wrapper is written by Kaichun Mo. Also, Jiayuan Gu provided helps.

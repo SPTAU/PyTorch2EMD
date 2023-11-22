@@ -186,7 +186,6 @@ at::Tensor ApproxMatchForward(
   AT_DISPATCH_FLOATING_TYPES(xyz1.scalar_type(), "ApproxMatchForward", ([&] {
         approxmatch<scalar_t><<<32,512>>>(b, n, m, xyz1.data<scalar_t>(), xyz2.data<scalar_t>(), match.data<scalar_t>(), temp.data<scalar_t>());
   }));
-  TORCH_CHECK(cudaGetLastError());
 
   return match;
 }
@@ -272,7 +271,6 @@ at::Tensor MatchCostForward(
   AT_DISPATCH_FLOATING_TYPES(xyz1.scalar_type(), "MatchCostForward", ([&] {
         matchcost<scalar_t><<<32,512>>>(b, n, m, xyz1.data<scalar_t>(), xyz2.data<scalar_t>(), match.data<scalar_t>(), cost.data<scalar_t>());
   }));
-  TORCH_CHECK(cudaGetLastError());
 
   return cost;
 }
@@ -391,7 +389,6 @@ std::vector<at::Tensor> MatchCostBackward(
         matchcostgrad1<scalar_t><<<32,512>>>(b, n, m, grad_cost.data<scalar_t>(), xyz1.data<scalar_t>(), xyz2.data<scalar_t>(), match.data<scalar_t>(), grad1.data<scalar_t>());
         matchcostgrad2<scalar_t><<<dim3(32,32),256>>>(b, n, m, grad_cost.data<scalar_t>(), xyz1.data<scalar_t>(), xyz2.data<scalar_t>(), match.data<scalar_t>(), grad2.data<scalar_t>());
   }));
-  TORCH_CHECK(cudaGetLastError());
 
   return std::vector<at::Tensor>({grad1, grad2});
 }
